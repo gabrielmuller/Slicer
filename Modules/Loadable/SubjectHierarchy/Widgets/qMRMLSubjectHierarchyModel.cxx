@@ -837,7 +837,6 @@ QStandardItem* qMRMLSubjectHierarchyModel::insertSubjectHierarchyItem(vtkIdType 
   for (int col=0; col<this->columnCount(); ++col)
     {
     QStandardItem* newItem = new QStandardItem();
-    this->updateItemFromSubjectHierarchyItem(newItem, itemID, col);
     items.append(newItem);
     }
 
@@ -847,6 +846,13 @@ QStandardItem* qMRMLSubjectHierarchyModel::insertSubjectHierarchyItem(vtkIdType 
   d->RowCache[itemID] = QModelIndex();
   parent->insertRow(row, items);
   d->RowCache[itemID] = items[0]->index();
+
+  // Now that the item is in the model, update it
+  for (int col=0; col<this->columnCount(); ++col)
+    {
+    QStandardItem* newItem = items[col];
+    this->updateItemFromSubjectHierarchyItem(newItem, itemID, col);
+    }
 
   return items[0];
 }
